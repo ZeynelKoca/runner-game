@@ -5,6 +5,7 @@ using System.Collections;
 public class CollisionDetector : MonoBehaviour
 {
     public TMP_Text CoinsText;
+    public ParticleSystem CoinsCollectedParticles;
 
     public int TotalCoinsCollected { get; private set; }
 
@@ -15,6 +16,7 @@ public class CollisionDetector : MonoBehaviour
             TotalCoinsCollected++;
             CoinsText.text = TotalCoinsCollected.ToString();
 
+            CoinsCollectedParticles.Play();
             Destroy(other.gameObject);
         } 
         else if (other.gameObject.tag.Equals("Obstacle"))

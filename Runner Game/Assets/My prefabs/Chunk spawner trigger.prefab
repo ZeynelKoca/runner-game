@@ -67,6 +67,8 @@ MonoBehaviour:
   SlideableObstaclePrefabs:
   - {fileID: 1686298631384696, guid: defe2fa889bd18f45b30aca5f815485a, type: 3}
   - {fileID: 1878423824847558, guid: 35cba3a52a8a7c44baa038f403ea2be5, type: 3}
+  UnpassableObstaclePrefabs:
+  - {fileID: 150262, guid: e0c9e7b86067ab64dacba4d674191ebb, type: 3}
   EmptyChunkPrefab: {fileID: 983763882691610433, guid: a358d0c16aea75d4bba491b857a27542,
     type: 3}
   ChunkSpawnTriggerPrefab: {fileID: 718841394589995978}

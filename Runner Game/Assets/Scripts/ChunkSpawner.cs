@@ -4,6 +4,7 @@ public class ChunkSpawner : MonoBehaviour
 {
     public GameObject[] JumpableObstaclePrefabs;
     public GameObject[] SlideableObstaclePrefabs;
+    public GameObject[] UnpassableObstaclePrefabs;
     public GameObject EmptyChunkPrefab;
     public GameObject ChunkSpawnTriggerPrefab;
     public GameObject CoinPrefab;
@@ -18,10 +19,11 @@ public class ChunkSpawner : MonoBehaviour
     void Start()
     {
         _randomWeightedItemGenerator = new RandomWeightedItemGenerator(
-            new WeightedItem(Item.Nothing, 4),
-            new WeightedItem(Item.Coin, 3),
-            new WeightedItem(Item.JumpableObstacle, 2),
-            new WeightedItem(Item.SlideableObstacle, 1)
+            new WeightedItem(Item.Nothing, 5),
+            new WeightedItem(Item.Coin, 4),
+            new WeightedItem(Item.JumpableObstacle, 3),
+            new WeightedItem(Item.SlideableObstacle, 2),
+            new WeightedItem(Item.UnpassableObstacle, 1)
         );
     }
 
@@ -67,6 +69,9 @@ public class ChunkSpawner : MonoBehaviour
                         break;
                     case Item.SlideableObstacle:
                         SpawnRandomSlideableObstacle(road, lane, items);
+                        break;
+                    case Item.UnpassableObstacle:
+                        SpawnRandomObstacle(UnpassableObstaclePrefabs, road, lane, items);
                         break;
                     case Item.Coin:
                         SpawnCoin(road, lane, items);

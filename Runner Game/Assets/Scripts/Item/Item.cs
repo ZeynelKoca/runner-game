@@ -2,6 +2,7 @@
 {
     JumpableObstacle,
     SlideableObstacle,
+    UnpassableObstacle,
     Coin,
     Nothing,
 };
