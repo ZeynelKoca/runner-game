@@ -57,13 +57,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5e44a16dbb34df458ae77147473a516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ObstaclePrefabs:
-  - {fileID: 1559687703273988, guid: fa6cb9ce6d88e5f48923c8636a490305, type: 3}
-  - {fileID: 1406288349017890, guid: e74cc5dcccf056846b28e67dac84038e, type: 3}
-  - {fileID: 2518049127539073484, guid: 99de13d56f5252444b5b47bb9a5298b4, type: 3}
+  JumpableObstaclePrefabs:
   - {fileID: 4152968106538457035, guid: 0ee9a1ac5d9504146b3c8c7781a1123d, type: 3}
+  - {fileID: 2518049127539073484, guid: 99de13d56f5252444b5b47bb9a5298b4, type: 3}
+  - {fileID: 1406288349017890, guid: e74cc5dcccf056846b28e67dac84038e, type: 3}
+  - {fileID: 1559687703273988, guid: fa6cb9ce6d88e5f48923c8636a490305, type: 3}
   - {fileID: 1300399225187642, guid: 2b3cabd4b48b10844aaf7f6b97260292, type: 3}
   - {fileID: 1051214733312122, guid: 8616e7e5b07b9d245b2aba184c6f035c, type: 3}
+  SlideableObstaclePrefabs:
+  - {fileID: 1686298631384696, guid: defe2fa889bd18f45b30aca5f815485a, type: 3}
+  - {fileID: 1878423824847558, guid: 35cba3a52a8a7c44baa038f403ea2be5, type: 3}
   EmptyChunkPrefab: {fileID: 983763882691610433, guid: a358d0c16aea75d4bba491b857a27542,
     type: 3}
   ChunkSpawnTriggerPrefab: {fileID: 718841394589995978}

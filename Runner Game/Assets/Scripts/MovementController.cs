@@ -10,6 +10,8 @@ public class MovementController : MonoBehaviour
     public float JumpForce;
     public float MovementSpeed;
     public float MovementAcceleration;
+    public Vector3 CrouchCenter;
+    public float CrouchHeight;
 
     public SwipeManager SwipeManager;
     public CharacterController CharacterController;
@@ -70,6 +72,19 @@ public class MovementController : MonoBehaviour
         _canMove = true;
     }
 
+    IEnumerator Slide()
+    {
+        var currentCenter = CharacterController.center;
+        var currentHeight = CharacterController.height;
+
+        CharacterController.center = CrouchCenter;
+        CharacterController.height = CrouchHeight;
+        StartCoroutine(RunAnimationFor(0.5f, "IsSliding"));
+        yield return new WaitForSeconds(1.5f);
+        CharacterController.center = currentCenter;
+        CharacterController.height = currentHeight;
+    }
+
     private void OnSwipeDetectedHandler(Swipe direction, Vector2 swipeVelocity)
     {
         switch (direction)
@@ -87,6 +102,12 @@ public class MovementController : MonoBehaviour
                 if (_canMove && _currentLane + 1 <= 2)
                 {
                     StartCoroutine(MoveLane(+1));
+                }
+                break;
+            case Swipe.Down:
+                if (_canMove && CharacterController.isGrounded)
+                {
+                    StartCoroutine(Slide());
                 }
                 break;
         }

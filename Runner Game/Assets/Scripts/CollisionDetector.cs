@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class CollisionDetector : MonoBehaviour
 {
@@ -18,9 +19,22 @@ public class CollisionDetector : MonoBehaviour
         } 
         else if (other.gameObject.tag.Equals("Obstacle"))
         {
-            Debug.Log("Player collided with an obstacle");
-            Application.Quit();
-            UnityEditor.EditorApplication.isPlaying = false;
+            StartCoroutine(EndGame(2f));
         }
+    }
+
+    IEnumerator EndGame(float waitTime)
+    {
+        StartCoroutine(KillPlayer());
+        yield return new WaitForSeconds(waitTime);
+        Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+    IEnumerator KillPlayer()
+    {
+        var animator = GetComponent<Animator>();
+        animator.enabled = false;
+        yield return null;
     }
 }
