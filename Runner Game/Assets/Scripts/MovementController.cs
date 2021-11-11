@@ -5,9 +5,11 @@ public class MovementController : MonoBehaviour
 {
     private const float GRAVITY_VALUE = 20;
 
-    public int LaneDistance;
+    public float LaneChangeDuration;
+    public float LaneDashSpeed;
     public float JumpForce;
     public float MovementSpeed;
+    public float MovementAcceleration;
 
     public SwipeManager SwipeManager;
     public CharacterController CharacterController;
@@ -15,16 +17,18 @@ public class MovementController : MonoBehaviour
 
     private Vector3 _playerVelocity;
     private bool _jump;
-    private bool _moveLeft;
-    private bool _moveRight;
-    private bool _canMove = true;
-    private int _currentLane = 0;
+    private bool _canMove;
+    private int _currentLane;
 
     // Start is called before the first frame update
     void Start()
     {
+        _canMove = true;
+        _currentLane = 1;
+
         SwipeManager.OnSwipeDetected += OnSwipeDetectedHandler;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -32,36 +36,37 @@ public class MovementController : MonoBehaviour
         var move = Vector3.forward;
         CharacterController.Move(move * Time.deltaTime * MovementSpeed);
 
-        if (_moveLeft)
-        {
-            StartCoroutine(MoveLane(-1));
-        }
-        else if (_moveRight)
-        {
-            StartCoroutine(MoveLane(+1));
-        }
-
         // Changes the height position of the player
         if (_jump && CharacterController.isGrounded)
         {
             _playerVelocity.y = JumpForce;
-            Animator.SetBool("IsJumping", true);
             _jump = false;
-            var coroutine = StopAnimation("IsJumping");
-            StartCoroutine(coroutine);
+            StartCoroutine(RunAnimationFor(0.9f, "IsJumping"));
         }
 
         _playerVelocity.y -= GRAVITY_VALUE * Time.deltaTime;
         CharacterController.Move(_playerVelocity * Time.deltaTime);
+
+        MovementSpeed += MovementAcceleration * Time.deltaTime;
+        LaneDashSpeed += MovementAcceleration * Time.deltaTime;
     }
 
     IEnumerator MoveLane(int laneOffset)
     {
-        CharacterController.Move(new Vector3(laneOffset, 0, 0) * Time.deltaTime * 4.4f);
-        yield return new WaitForSeconds(0.5f);
+        _canMove = false;
+        var startPosition = transform.position;
 
-        _moveLeft = false;
-        _moveRight = false;
+        _ = laneOffset == -1
+            ? StartCoroutine(RunAnimationFor(LaneChangeDuration / 10, "IsRunningLeft"))
+            : StartCoroutine(RunAnimationFor(LaneChangeDuration / 10, "IsRunningRight"));
+
+        while (LaneChangeDuration > Vector3.Distance(startPosition, transform.position))
+        {
+            CharacterController.Move(transform.TransformDirection(new Vector3(laneOffset, 0, 0)) * LaneDashSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        _currentLane += laneOffset;
         _canMove = true;
     }
 
@@ -73,29 +78,24 @@ public class MovementController : MonoBehaviour
                 _jump = true;
                 break;
             case Swipe.Left:
-                if (_canMove && _currentLane - 1 >= -1)
+                if (_canMove && _currentLane - 1 >= 0)
                 {
-                    _canMove = false;
-                    _moveLeft = true;
-                    _currentLane -= 1;
-                    Debug.Log($"Player moved to lane {_currentLane}");
+                    StartCoroutine(MoveLane(-1));
                 }
                 break;
             case Swipe.Right:
-                if (_canMove && _currentLane + 1 <= 1)
+                if (_canMove && _currentLane + 1 <= 2)
                 {
-                    _canMove = false;
-                    _moveRight = true;
-                    _currentLane += 1;
-                    Debug.Log($"Player moved to lane {_currentLane}");
+                    StartCoroutine(MoveLane(+1));
                 }
                 break;
         }
     }
 
-    IEnumerator StopAnimation(string animationName)
+    IEnumerator RunAnimationFor(float secondsWaitTime, string animationName)
     {
-        yield return new WaitForSeconds(1);
+        Animator.SetBool(animationName, true);
+        yield return new WaitForSeconds(secondsWaitTime);
         Animator.SetBool(animationName, false);
     }
 }
